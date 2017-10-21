@@ -1,0 +1,119 @@
+<h1 id="practical-machine-learning-fibnal-course-project-report">Practical Machine Learning Fibnal Course Project Report</h1>
+<p>One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants.</p>
+<h2 id="background">Background</h2>
+<p>Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, our goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).</p>
+<h2 id="data-sources">Data Sources</h2>
+<p>The training data for this project is available here:<br /><a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"><a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv</a></a><br />The test data is available here:<br /><a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"><a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv</a></a><br />The data for this project comes from this original source: <a href="http://groupware.les.inf.puc-rio.br/har"><a href="http://groupware.les.inf.puc-rio.br/har">http://groupware.les.inf.puc-rio.br/har</a></a>. If you use the document you create for this class for any purpose please cite them as they have been very generous in allowing their data to be used for this kind of assignment.</p>
+<h2 id="intended-results">Intended Results</h2>
+<p>The goal of this project is to predict the manner in which they did the exercise. This is the &quot;classe&quot; variable in the training set. You may use any of the other variables to predict with. You should create a report describing how you built your model, how you used cross validation, what you think the expected out of sample error is, and why you made the choices you did. You will also use your prediction model to predict 20 different test cases.<br />1. Your submission should consist of a link to a Github repo with your R markdown and compiled HTML file describing your analysis. Please constrain the text of the writeup to &lt; 2000 words and the number of figures to be less than 5. It will make it easier for the graders if you submit a repo with a gh-pages branch so the HTML page can be viewed online (and you always want to make it easy on graders :-).<br />2. You should also apply your machine learning algorithm to the 20 test cases available in the test data above. Please submit your predictions in appropriate format to the programming assignment for automated grading. See the programming assignment for additional details.</p>
+<h2 id="report">Report</h2>
+<p>In order to classify the test dataset the following was implemented in R using the caret library:</p>
+<ol style="list-style-type: decimal">
+<li><p>Use of the caret library.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(caret)</code></pre></li>
+<li><p>Load training and test datasets.</p></li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">training &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;pml-training.csv&quot;</span>)
+test &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;pml-testing.csv&quot;</span>)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Preprocessing steps which includes the elimination of NA values, all the variables that have near zero variance and all the variables that do not contribute to the classifier performance. This step is applied to the whole training and test datasets.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">## Remove variables that are almost always NA
+mostlyNA &lt;-<span class="st"> </span><span class="kw">sapply</span>(training, function(x) <span class="kw">mean</span>(<span class="kw">is.na</span>(x))) &gt;<span class="st"> </span><span class="fl">0.95</span>
+training &lt;-<span class="st"> </span>training[, mostlyNA==F]
+test &lt;-<span class="st"> </span>test[, mostlyNA==F]
+
+## Remove variables with nearly zero variance
+nzv &lt;-<span class="st"> </span><span class="kw">nearZeroVar</span>(training)
+training &lt;-<span class="st"> </span>training[, -nzv]
+test &lt;-<span class="st"> </span>test[, -nzv]
+
+## Remove variables that do not contribute to the overall classification process
+training &lt;-<span class="st"> </span>training[, -(<span class="dv">1</span>:<span class="dv">5</span>)]
+test &lt;-<span class="st"> </span>test[, -(<span class="dv">1</span>:<span class="dv">5</span>)]</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Initialize the classifier based on a Random Forest model using a three cross validation process over training subset.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">Parameters &lt;-<span class="st"> </span><span class="kw">trainControl</span>(<span class="dt">method=</span><span class="st">&quot;cv&quot;</span>, <span class="dt">number=</span><span class="dv">3</span>, <span class="dt">verboseIter=</span>F)
+fit &lt;-<span class="st"> </span><span class="kw">train</span>(classe ~<span class="st"> </span>., <span class="dt">data=</span>train1, <span class="dt">method=</span><span class="st">&quot;rf&quot;</span>, <span class="dt">trControl=</span>Parameters )</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Print the obtained model to see the overall classifier accuracy.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(fit$finalModel)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">## Call:
+##   randomForest(x = x, y = y, mtry = param$mtry) 
+## Type of random forest: classification
+## Number of trees: 500
+## No. of variables tried at each split: 27
+## 
+## OOB estimate of  error rate: 0.18%
+## Confusion matrix:
+##   A    B    C    D    E  class.error
+## A 4462    2    0    0    0 0.0004480287
+## B    5 3030    2    1    0 0.0026333114
+## C    0    5 2733    0    0 0.0018261505
+## D    0    0    9 2563    1 0.0038865138
+## E    0    1    0    2 2883 0.0010395010</code></pre>
+<p>From the model creation it can be observed thta the algorithm decid to create 500 trees, each one with 27 variables associated.</p>
+<ol start="6" style="list-style-type: decimal">
+<li>Using the previously created model, the unpredicted instances are classified in order to obtain the labels for each of the elements in the test dataset.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">## Predict elements on the  test dataset
+predictions &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, <span class="dt">newdata=</span>test)
+
+##To evaluate accuracy
+pedictionsEvaluation&lt;-predictions
+
+## Convert predictions to character vector
+predictions &lt;-<span class="st"> </span><span class="kw">as.character</span>(predictions)</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Save the predictons to a file.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">## Number of predictions made
+n &lt;-<span class="st"> </span><span class="kw">length</span>(predictions)
+
+##Save all predictions in a single file
+pred &lt;-<span class="st"> </span><span class="kw">c</span>()
+for(i in <span class="dv">1</span>:n) {
+  pred &lt;-<span class="st"> </span><span class="kw">c</span>(pred, <span class="kw">paste0</span>(<span class="st">&quot;problem_id_&quot;</span>, i,<span class="st">&quot; &quot;</span>, predictions[i],<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>))
+}
+<span class="kw">write.table</span>(pred, <span class="dt">file=</span><span class="st">&quot;predictions.txt&quot;</span>, <span class="dt">quote=</span>F, <span class="dt">row.names=</span>F, <span class="dt">col.names=</span>F)</code></pre>
+<ol start="8" style="list-style-type: decimal">
+<li>After use the results (predictions.txt) on the final quiz, extract goldStandar to evaluate the accuracy.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">goldStandar&lt;-<span class="kw">c</span>(<span class="st">&quot;B&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;D&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;E&quot;</span>,<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;B&quot;</span>)
+
+<span class="co"># show confusion matrix to get estimate of out-of-sample error</span>
+<span class="kw">print</span>(<span class="kw">confusionMatrix</span>(goldStandar, pedictionsEvaluation))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">## Confusion Matrix and Statistics
+## 
+## Reference
+## Prediction A B C D E
+## A 7 0 0 0 0
+## B 0 8 0 0 0
+## C 0 0 1 0 0
+## D 0 0 0 1 0
+## E 0 0 0 0 3
+## 
+## Overall Statistics
+## 
+## Accuracy : 1          
+## 95% CI : (0.8316, 1)
+## No Information Rate : 0.4        
+## P-Value [Acc &gt; NIR] : 1.1e-08    
+## 
+## Kappa : 1          
+## Mcnemar&#39;s Test P-Value : NA         
+## 
+## Statistics by Class:
+## 
+## Class: A Class: B Class: C Class: D Class: E
+## Sensitivity              1.00      1.0     1.00     1.00     1.00
+## Specificity              1.00      1.0     1.00     1.00     1.00
+## Pos Pred Value           1.00      1.0     1.00     1.00     1.00
+## Neg Pred Value           1.00      1.0     1.00     1.00     1.00
+## Prevalence               0.35      0.4     0.05     0.05     0.15
+## Detection Rate           0.35      0.4     0.05     0.05     0.15
+## Detection Prevalence     0.35      0.4     0.05     0.05     0.15
+## Balanced Accuracy        1.00      1.0     1.00     1.00     1.00</code></pre>
+<p>According to the confusion matrix, the accuracy of the model is one which highlights that the features selected as well as the classifier are the correct ones to predict this kind of information, however more experiments need to be performed in order to test the model using more test samples from distinct types of accelerometers.</p>

@@ -41,7 +41,7 @@ Report
 In order to classify the test dataset the following was implemented in R using the caret library:
 
 1. Use of the caret library.
-$\qquad$ ``` r
+``` r
 library(caret)
 ```
 
