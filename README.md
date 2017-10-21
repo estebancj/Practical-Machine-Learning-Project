@@ -1,4 +1,4 @@
-Practical Machine Learning Fibnal Course Project Report
+Practical Machine Learning Final Course Project Report
 ================================================
 
 One thing that people regularly do is quantify how much of a particular activity they do, but 
