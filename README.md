@@ -119,7 +119,7 @@ pedictionsEvaluation<-predictions
 predictions <- as.character(predictions)
 ```
 
-7. Save the predictons to a file.
+7. Save the predictons to a file (predictions.txt).
 
 ``` r
 ## Number of predictions made
