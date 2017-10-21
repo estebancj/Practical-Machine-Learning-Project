@@ -41,11 +41,11 @@ Report
 In order to classify the test dataset the following was implemented in R using the caret library:
 
 1. Use of the caret library.
-``` r
+$\qquad$ ``` r
 library(caret)
 ```
 
-2. Load training and test datasets 
+2. Load training and test datasets. 
 
 ``` r
 training <- read.csv("pml-training.csv")
