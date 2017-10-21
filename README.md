@@ -38,9 +38,9 @@ The goal of this project is to predict the manner in which they did the exercise
 Report
 ----------------
 
-In order to classify the test dataset the following was implemented in R using the caret library:
+In order to classify the test dataset the following was implemented in R (project.r):
 
-1. Use of the caret library.
+1. Use of the caret library (Machine learning library).
 ``` r
 library(caret)
 ```
