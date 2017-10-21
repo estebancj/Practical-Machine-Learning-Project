@@ -85,6 +85,7 @@ fit <- train(classe ~ ., data=train1, method="rf", trControl=Parameters )
 print(fit$finalModel)
 ```
 
+``` r
 ## Call:
 ##   randomForest(x = x, y = y, mtry = param$mtry) 
 ## Type of random forest: classification
@@ -99,6 +100,7 @@ print(fit$finalModel)
 ## C    0    5 2733    0    0 0.0018261505
 ## D    0    0    9 2563    1 0.0038865138
 ## E    0    1    0    2 2883 0.0010395010
+```
 
 From the model creation it can be observed thta the algorithm decid to create 500 
 trees, each one with 27 variables associated.
@@ -141,6 +143,7 @@ goldStandar<-c("B","A","B","A","A","E","D","B","A","A","B","C","B","A","E","E","
 print(confusionMatrix(goldStandar, pedictionsEvaluation))
 ```
 
+``` r
 ## Confusion Matrix and Statistics
 ## 
 ## Reference
@@ -172,6 +175,7 @@ print(confusionMatrix(goldStandar, pedictionsEvaluation))
 ## Detection Rate           0.35      0.4     0.05     0.05     0.15
 ## Detection Prevalence     0.35      0.4     0.05     0.05     0.15
 ## Balanced Accuracy        1.00      1.0     1.00     1.00     1.00
+```
 
 According to the confusion matrix, the accuracy of the model is one which highlights that the features selected as well
 as the classifier are the correct ones to predict this kind of information, however more experiments need to be performed 
