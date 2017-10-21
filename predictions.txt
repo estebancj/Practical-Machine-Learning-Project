@@ -1,0 +1,40 @@
+problem_id_1 B
+
+problem_id_2 A
+
+problem_id_3 B
+
+problem_id_4 A
+
+problem_id_5 A
+
+problem_id_6 E
+
+problem_id_7 D
+
+problem_id_8 B
+
+problem_id_9 A
+
+problem_id_10 A
+
+problem_id_11 B
+
+problem_id_12 C
+
+problem_id_13 B
+
+problem_id_14 A
+
+problem_id_15 E
+
+problem_id_16 E
+
+problem_id_17 A
+
+problem_id_18 B
+
+problem_id_19 B
+
+problem_id_20 B
+
